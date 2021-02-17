@@ -1,12 +1,9 @@
 package com.example.im.presenter
 
-import android.provider.SyncStateContract
-import android.widget.Toast
 import com.example.im.adapter.EMCallBackAdapter
 import com.example.im.contract.LoginContract
 import com.example.im.extensions.isValidAccount
 import com.example.im.extensions.isValidPassword
-import com.hyphenate.EMError
 import com.hyphenate.chat.EMClient
 
 class LoginPresenter(override var view: LoginContract.View?) : LoginContract.Presenter {

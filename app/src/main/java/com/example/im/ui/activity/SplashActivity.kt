@@ -7,8 +7,7 @@ import com.example.im.presenter.SplashPresenter
 class SplashActivity : BaseActivity(), SplashContract.View {
     override val presenter by lazy { SplashPresenter(this) }
     override var run: (() -> Unit)? = {
-        startActivity<LoginActivity>()
-        finish()
+        startActivityAndFinish<LoginActivity>()
     }
 
     override fun init() {
@@ -22,8 +21,7 @@ class SplashActivity : BaseActivity(), SplashContract.View {
     }
 
     override fun onLoggedIn() {
-        startActivity<MainActivity>()
-        finish()
+        startActivityAndFinish<MainActivity>()
     }
 
 }

@@ -5,6 +5,7 @@
     <string name="password_confirm_edit_text_hint">确认密码</string>
     <string name="login_btn_text">登录</string>
     <string name="register_user_text_view_text">注册新用户</string>
+    <string name="register_btn_text">注册</string>
     <string name="account_error">账号不正确，3到20位，首位必须是字母</string>
     <string name="password_error">密码不正确，必须是3到20位数字</string>
     <string name="password_confirm_error">两次密码不一致</string>
@@ -16,4 +17,5 @@
     <string name="login_success">登录成功</string>
     <string name="login_failed">登录失败</string>
     <string name="login_failed_account_not_found">账号不存在</string>
+    <string name="login_failed_account_already_login">账号已登录</string>
 </resources>

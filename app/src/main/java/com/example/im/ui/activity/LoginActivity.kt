@@ -6,6 +6,9 @@ import com.example.im.presenter.LoginPresenter
 import com.example.im.utils.LogUtils
 import com.hyphenate.EMError
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login.accountEditText
+import kotlinx.android.synthetic.main.activity_login.passwordEditText
+import kotlinx.android.synthetic.main.activity_register.*
 
 class LoginActivity : BaseActivity(), LoginContract.View {
     override val presenter by lazy { LoginPresenter(this) }
@@ -26,6 +29,10 @@ class LoginActivity : BaseActivity(), LoginContract.View {
             login()
             return@setOnEditorActionListener true
         }
+        registerUserTextView.setOnClickListener {
+            hideSoftKeyboard()
+            startActivityAndFinish<RegisterActivity>()
+        }
     }
 
     private fun login() {
@@ -36,15 +43,11 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     override fun getLayoutResID() = R.layout.activity_login
 
     override fun onAccountError() {
-        accountEditText.error = getString(R.string.account_error)
-        accountEditText.requestFocus()
-        showSoftKeyBoard(accountEditText)
+        onInputError(accountEditText, R.string.account_error)
     }
 
     override fun onPasswordError() {
-        passwordEditText.error = getString(R.string.password_error)
-        passwordEditText.requestFocus()
-        showSoftKeyBoard(passwordEditText)
+        onInputError(passwordEditText, R.string.password_error)
     }
 
     override fun onStartLogin() {
@@ -53,8 +56,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun onLoggedInSuccess() {
         dismissProgress()
-        startActivity<MainActivity>()
-        finish()
+        startActivityAndFinish<MainActivity>()
     }
 
     override fun onLoggedInFailed(code: Int, message: String?) {
@@ -62,6 +64,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         dismissProgress()
         toast(when(code) {
             EMError.USER_NOT_FOUND -> getString(R.string.login_failed_account_not_found)
+            EMError.USER_ALREADY_LOGIN -> getString(R.string.login_failed_account_already_login)
             else -> getString(R.string.login_failed)
         })
     }

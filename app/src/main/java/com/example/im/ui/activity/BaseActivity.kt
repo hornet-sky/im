@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.im.contract.BasePresenter
-import com.example.im.presenter.SplashPresenter
 
 abstract class BaseActivity : AppCompatActivity() {
     companion object {
@@ -53,6 +52,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun showSoftKeyBoard(view: View) {
+        view.requestFocus()
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED)
     }
 
@@ -68,5 +68,10 @@ abstract class BaseActivity : AppCompatActivity() {
     inline fun <reified T> startActivity() {
         val intent =  Intent(this, T::class.java)
         startActivity(intent)
+    }
+    inline fun <reified T> startActivityAndFinish() {
+        val intent =  Intent(this, T::class.java)
+        startActivity(intent)
+        finish()
     }
 }
