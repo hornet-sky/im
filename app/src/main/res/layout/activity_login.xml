@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:text="@string/registerUserTextViewText"
+        android:text="@string/register_user_text_view_text"
         android:textColor="@color/qq_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton" />
