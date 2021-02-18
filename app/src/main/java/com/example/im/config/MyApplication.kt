@@ -1,6 +1,7 @@
 package com.example.im.config
 
 import android.app.Application
+import cn.bmob.v3.Bmob
 import com.example.im.BuildConfig
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMOptions
@@ -8,6 +9,10 @@ import com.hyphenate.chat.EMOptions
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        // 1、Bmob云后端 初始化
+        Bmob.initialize(this, "c18f4500a5799a9b5584276f82d7fce4");
+
+        // 2、环信 初始化
         val options = EMOptions()
         // 默认添加好友时，是不需要验证的，改成需要验证
         // options.setAcceptInvitationAlways(false);

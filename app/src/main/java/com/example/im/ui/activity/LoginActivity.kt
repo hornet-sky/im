@@ -21,6 +21,9 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     */
 
     override fun init() {
+        intent.getStringExtra("account")?.let {
+            accountEditText.setText(it)
+        }
         loginButton.setOnClickListener {
             login()
         }
@@ -31,7 +34,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         }
         registerUserTextView.setOnClickListener {
             hideSoftKeyboard()
-            startActivityAndFinish<RegisterActivity>()
+            startActivityThenFinish<RegisterActivity>()
         }
     }
 
@@ -56,7 +59,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun onLoggedInSuccess() {
         dismissProgress()
-        startActivityAndFinish<MainActivity>()
+        startActivityThenFinish<MainActivity>()
     }
 
     override fun onLoggedInFailed(code: Int, message: String?) {

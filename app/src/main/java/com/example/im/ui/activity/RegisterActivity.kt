@@ -48,18 +48,27 @@ class RegisterActivity : BaseActivity(), RegisterContract.View {
         showProgress(getString(R.string.registering))
     }
 
-    override fun onRegisterSuccess() {
+    override fun onRegisterSuccess(account: String) {
         dismissProgress()
-        startActivityAndFinish<LoginActivity>()
+        startActivityThenFinish<LoginActivity>("account" to account)
+        toast(getString(R.string.register_success))
     }
 
-    override fun onRegisterFailed(code: Int, message: String?) {
-        LogUtils.d("onRegisterFailed [ code = $code, message = $message ]")
+    override fun onRegisterFailed(serverType: Int, code: Int, message: String?) {
+        LogUtils.d("onRegisterFailed [ serverType = $serverType, code = $code, message = $message ]")
         dismissProgress()
-        toast(when(code) {
-            EMError.USER_ALREADY_EXIST -> getString(R.string.register_failed_account_exists)
-            else -> getString(R.string.register_failed)
-        })
+        val message = if(serverType == RegisterContract.SERVER_TYPE_BMOB) {
+            when(code) {
+                202 -> getString(R.string.register_failed_account_exists)
+                else -> getString(R.string.register_failed)
+            }
+        } else {
+            when(code) {
+                EMError.USER_ALREADY_EXIST -> getString(R.string.register_failed_account_exists)
+                else -> getString(R.string.register_failed)
+            }
+        }
+        toast(message)
     }
 
 }

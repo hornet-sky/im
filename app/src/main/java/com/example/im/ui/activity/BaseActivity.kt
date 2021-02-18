@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.im.contract.BasePresenter
+import java.io.Serializable
 
 abstract class BaseActivity : AppCompatActivity() {
     companion object {
@@ -48,7 +50,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun hideSoftKeyboard() {
-        inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        currentFocus?.let {
+            inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
     fun showSoftKeyBoard(view: View) {
@@ -65,13 +69,53 @@ abstract class BaseActivity : AppCompatActivity() {
         presenter.destroy()
     }
 
-    inline fun <reified T> startActivity() {
+    inline fun <reified T> startActivity(vararg extras: Pair<String, Any>) {
         val intent =  Intent(this, T::class.java)
+        extras?.let {
+            fillIntentArguments(intent, it)
+        }
         startActivity(intent)
     }
-    inline fun <reified T> startActivityAndFinish() {
+    inline fun <reified T> startActivityThenFinish(vararg extras: Pair<String, Any?>) {
         val intent =  Intent(this, T::class.java)
+        extras?.let {
+            fillIntentArguments(intent, it)
+        }
         startActivity(intent)
         finish()
+    }
+
+    fun fillIntentArguments(intent: Intent, params: Array<out Pair<String, Any?>>) {
+        for((key, value) in params) {
+            when (value) {
+                null -> intent.putExtra(key, null as Serializable?)
+                is Int -> intent.putExtra(key, value)
+                is Long -> intent.putExtra(key, value)
+                is CharSequence -> intent.putExtra(key, value)
+                is String -> intent.putExtra(key, value)
+                is Float -> intent.putExtra(key, value)
+                is Double -> intent.putExtra(key, value)
+                is Char -> intent.putExtra(key, value)
+                is Short -> intent.putExtra(key, value)
+                is Boolean -> intent.putExtra(key, value)
+                is Serializable -> intent.putExtra(key, value)
+                is Bundle -> intent.putExtra(key, value)
+                is Parcelable -> intent.putExtra(key, value)
+                is Array<*> -> when {
+                    value.isArrayOf<CharSequence>() -> intent.putExtra(key, value)
+                    value.isArrayOf<String>() -> intent.putExtra(key, value)
+                    value.isArrayOf<Parcelable>() -> intent.putExtra(key, value)
+                    else -> throw RuntimeException("Intent extra ${key} has wrong type ${value.javaClass.name}")
+                }
+                is IntArray -> intent.putExtra(key, value)
+                is LongArray -> intent.putExtra(key, value)
+                is FloatArray -> intent.putExtra(key, value)
+                is DoubleArray -> intent.putExtra(key, value)
+                is CharArray -> intent.putExtra(key, value)
+                is ShortArray -> intent.putExtra(key, value)
+                is BooleanArray -> intent.putExtra(key, value)
+                else -> throw RuntimeException("Intent extra ${key} has wrong type ${value.javaClass.name}")
+            }
+        }
     }
 }

@@ -14,6 +14,12 @@ interface BasePresenter<T: BaseView> {
         handler.post(c)
     }
 
+    fun doAsync(c: () -> Unit) {
+        Thread {
+            c.invoke()
+        }.start()
+    }
+
     fun destroy() {
         println("BasePresenter.destroy [ view = $view ]")
         view = null // 相互引用 要防止内存泄漏

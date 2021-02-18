@@ -28,11 +28,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IM"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.RegisterActivity"></activity>
-
+        <provider
+            android:name="cn.bmob.v3.util.BmobContentProvider"
+            android:authorities="com.example.im.BmobContentProvider">
+        </provider>
+        <activity android:name=".ui.activity.RegisterActivity" />
+        <!--
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" /> <!-- 设置环信应用的AppKey -->
+            android:required="true" /> --><!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="1150210216046483#demo" /> <!-- 声明SDK所需的service SDK核心功能 -->
