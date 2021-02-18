@@ -68,6 +68,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         toast(when(code) {
             EMError.USER_NOT_FOUND -> getString(R.string.login_failed_account_not_found)
             EMError.USER_ALREADY_LOGIN -> getString(R.string.login_failed_account_already_login)
+            EMError.USER_AUTHENTICATION_FAILED -> getString(R.string.login_failed_invalid_account_or_password)
             else -> getString(R.string.login_failed)
         })
     }
