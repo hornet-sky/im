@@ -19,11 +19,11 @@
     <string name="login_failed_account_not_found">账号不存在</string>
     <string name="login_failed_account_already_login">账号已登录</string>
     <string name="login_failed_invalid_account_or_password">账号或密码错误</string>
-    <string name="bottom_navigation_bar_conversations_title">消息</string>
-    <string name="bottom_navigation_bar_contacts_title">联系人</string>
-    <string name="bottom_navigation_bar_dynamics_title">动态</string>
-    <string name="action_bar_dynamics_title">动态</string>
+    <string name="conversations_title">消息</string>
+    <string name="contacts_title">联系人</string>
+    <string name="dynamics_title">动态</string>
     <string name="logout_btn_text">退（%s）出</string>
     <string name="logouting">退出中…</string>
     <string name="logout_failed">退出失败</string>
+    <string name="loading_failed">加载%s失败</string>
 </resources>

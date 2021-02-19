@@ -22,6 +22,6 @@ interface BasePresenter<T: BaseView> {
 
     fun destroy() {
         println("BasePresenter.destroy [ view = $view ]")
-        view = null // 相互引用 要防止内存泄漏
+        view = null // 解除相互引用 防止内存泄漏
     }
 }

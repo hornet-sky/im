@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/bottom_navi_bar_item_conversations"
         android:icon="@drawable/ic_chat_bubble_24"
-        android:title="@string/bottom_navigation_bar_conversations_title"/>
+        android:title="@string/conversations_title"/>
 
     <item android:id="@+id/bottom_navi_bar_item_contacts"
         android:icon="@drawable/ic_person_24"
-        android:title="@string/bottom_navigation_bar_contacts_title"/>
+        android:title="@string/contacts_title"/>
 
     <item android:id="@+id/bottom_navi_bar_item_dynamics"
         android:icon="@drawable/ic_star_24"
-        android:title="@string/bottom_navigation_bar_dynamics_title"/>
+        android:title="@string/dynamics_title"/>
 </menu>

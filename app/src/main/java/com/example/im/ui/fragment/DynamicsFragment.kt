@@ -14,7 +14,7 @@ class DynamicsFragment : BaseFragment(), DynamicsContract.View {
     override val presenter by lazy { DynamicsPresenter(this) }
 
     override fun getResId() = R.layout.fragment_dynamics
-    override fun getTitle() = getString(R.string.action_bar_dynamics_title)
+    override fun getTitle() = getString(R.string.dynamics_title)
     override fun initView(view: View?): View {
         view!!.findViewById<Button>(R.id.logoutButton).text = getString(R.string.logout_btn_text, EMClient.getInstance().currentUser)
         return view
