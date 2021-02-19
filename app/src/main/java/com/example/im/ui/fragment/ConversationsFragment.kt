@@ -1,5 +1,10 @@
 package com.example.im.ui.fragment
 
-class ConversationsFragment : BaseFragment() {
+import com.example.im.contract.BasePresenter
+import com.example.im.contract.ConversationsContract
+import com.example.im.presenter.ConversationsPresenter
+
+class ConversationsFragment : BaseFragment(), ConversationsContract.View {
+    override val presenter = ConversationsPresenter(this)
 
 }

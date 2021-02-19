@@ -17,7 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
     companion object {
         const val DELAY: Long = 2000
     }
-    protected val handler = Handler(Looper.myLooper()!!)
+    protected val handler = Handler(Looper.getMainLooper())
     protected open var run: (() -> Unit)? = null
     protected abstract val presenter: BasePresenter<*>
     private val inputMethodManager by lazy { getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager }
@@ -70,16 +70,14 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     inline fun <reified T> startActivity(vararg extras: Pair<String, Any>) {
-        val intent =  Intent(this, T::class.java)
-        extras?.let {
-            fillIntentArguments(intent, it)
+        val intent =  Intent(this, T::class.java).apply {
+            fillIntentArguments(this, extras)
         }
         startActivity(intent)
     }
     inline fun <reified T> startActivityThenFinish(vararg extras: Pair<String, Any?>) {
-        val intent =  Intent(this, T::class.java)
-        extras?.let {
-            fillIntentArguments(intent, it)
+        val intent =  Intent(this, T::class.java).apply {
+            fillIntentArguments(this, extras)
         }
         startActivity(intent)
         finish()

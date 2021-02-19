@@ -22,4 +22,8 @@
     <string name="bottom_navigation_bar_conversations_title">消息</string>
     <string name="bottom_navigation_bar_contacts_title">联系人</string>
     <string name="bottom_navigation_bar_dynamics_title">动态</string>
+    <string name="action_bar_dynamics_title">动态</string>
+    <string name="logout_btn_text">退（%s）出</string>
+    <string name="logouting">退出中…</string>
+    <string name="logout_failed">退出失败</string>
 </resources>
