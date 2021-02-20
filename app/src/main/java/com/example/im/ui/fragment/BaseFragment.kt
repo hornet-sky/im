@@ -96,6 +96,8 @@ abstract class BaseFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroy()
+        if(progressDialog.isShowing)
+            progressDialog.dismiss()
     }
 
     inline fun <reified T> startActivity(vararg extras: Pair<String, Any>) {

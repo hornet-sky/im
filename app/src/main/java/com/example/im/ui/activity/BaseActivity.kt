@@ -67,6 +67,8 @@ abstract class BaseActivity : AppCompatActivity() {
             handler.removeCallbacks(it)
         }
         presenter.destroy()
+        if(progressDialog.isShowing)
+            progressDialog.dismiss()
     }
 
     inline fun <reified T> startActivity(vararg extras: Pair<String, Any>) {

@@ -1,5 +1,6 @@
 package com.example.im.presenter
 
+import com.example.im.adapter.EMCallBackAdapter
 import com.example.im.contract.ContactsContract
 import com.example.im.model.ContactsItem
 import com.hyphenate.EMValueCallBack
@@ -7,6 +8,7 @@ import com.hyphenate.chat.EMClient
 
 class ContactsPresenter(override var view: ContactsContract.View?) : ContactsContract.Presenter {
     override fun loadContacts() {
+        view!!.onStartLoadContacts()
         EMClient.getInstance().contactManager().aysncGetAllContactsFromServer(object: EMValueCallBack<List<String>> {
             override fun onSuccess(accounts: List<String>?) {
                 val contacts = mutableListOf<ContactsItem>()
@@ -22,6 +24,22 @@ class ContactsPresenter(override var view: ContactsContract.View?) : ContactsCon
             }
         })
 
+    }
+
+    override fun deleteContact(contact: ContactsItem) {
+        view!!.onStartDeleteContact()
+        EMClient.getInstance().contactManager().aysncDeleteContact(contact.account, object: EMCallBackAdapter() {
+            override fun onSuccess() {
+                uiThread {
+                    loadContacts()
+                    view!!.onDeleteContactSuccess(contact)
+                }
+            }
+
+            override fun onError(code: Int, message: String?) {
+                uiThread { view!!.onDeleteContactFailed(code, message) }
+            }
+        })
     }
 
 }

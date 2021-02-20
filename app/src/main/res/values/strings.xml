@@ -26,4 +26,9 @@
     <string name="logouting">退出中…</string>
     <string name="logout_failed">退出失败</string>
     <string name="loading_failed">加载%s失败</string>
+    <string name="contacts_delete_title">删除好友</string>
+    <string name="contacts_delete_message">确定要和 %s 友尽？</string>
+    <string name="contacts_deleting">删除好友中…</string>
+    <string name="contacts_delete_success">删除好友成功</string>
+    <string name="contacts_delete_failed">删除好友失败</string>
 </resources>

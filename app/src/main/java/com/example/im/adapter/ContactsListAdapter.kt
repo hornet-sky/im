@@ -16,6 +16,7 @@ class ContactsListAdapter : ListAdapter<ContactsItem, ContactsListAdapter.ViewHo
     override fun areContentsTheSame(oldItem: ContactsItem, newItem: ContactsItem) = oldItem.account == newItem.account
 }) {
     private var onItemViewClickListener: OnItemViewClickListener? = null
+    private var onItemViewLongClickListener: OnItemViewLongClickListener? = null
 
     fun setOnItemViewClickListener(onItemViewClickListener: OnItemViewClickListener) {
         this.onItemViewClickListener = onItemViewClickListener
@@ -29,10 +30,26 @@ class ContactsListAdapter : ListAdapter<ContactsItem, ContactsListAdapter.ViewHo
         }
     }
 
+    fun setOnItemViewLongClickListener(onItemViewLongClickListener: OnItemViewLongClickListener) {
+        this.onItemViewLongClickListener = onItemViewLongClickListener
+    }
+
+    fun setOnItemViewLongClickListener(onItemViewLongClick: (Int, ContactsItem) -> Unit) {
+        this.onItemViewLongClickListener = object: OnItemViewLongClickListener {
+            override fun onLongClick(position: Int, item: ContactsItem) {
+                onItemViewLongClick.invoke(position, item)
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return LayoutInflater.from(parent.context).inflate(R.layout.contacts_list_item, parent, false).let {
             val holder = ViewHolder(it)
             it.setOnClickListener { onItemViewClickListener?.onClick(holder.adapterPosition, getItem(holder.adapterPosition)) }
+            it.setOnLongClickListener {
+                onItemViewLongClickListener?.onLongClick(holder.adapterPosition, getItem(holder.adapterPosition))
+                true
+            }
             holder
         }
     }
@@ -59,6 +76,10 @@ class ContactsListAdapter : ListAdapter<ContactsItem, ContactsListAdapter.ViewHo
 
     interface OnItemViewClickListener {
         fun onClick(position: Int, item: ContactsItem)
+    }
+
+    interface OnItemViewLongClickListener {
+        fun onLongClick(position: Int, item: ContactsItem)
     }
 }
 

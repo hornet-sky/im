@@ -17,13 +17,13 @@ class LoginPresenter(override var view: LoginContract.View?) : LoginContract.Pre
                 it.onPasswordError()
                 return
             }
-            it.onStartLogin()
             loginEM(account, password)
         }
 
     }
 
     private fun loginEM(account: String, password: String) {
+        view!!.onStartLogin()
         EMClient.getInstance().login(account, password, object : EMCallBackAdapter() {
             override fun onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups()
