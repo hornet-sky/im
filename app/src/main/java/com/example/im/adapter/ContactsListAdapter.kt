@@ -68,7 +68,7 @@ class ContactsListAdapter : ListAdapter<ContactsItem, ContactsListAdapter.ViewHo
         fun bind(itemData: ContactsItem, firstLetterVisibility: Int) {
             firstLetterTextView.visibility = firstLetterVisibility
             if(firstLetterVisibility == View.VISIBLE) {
-                firstLetterTextView.text = itemData.account.subSequence(0, 1)
+                firstLetterTextView.text = itemData.firstLetter
             }
             accountTextView.text = itemData.account
         }

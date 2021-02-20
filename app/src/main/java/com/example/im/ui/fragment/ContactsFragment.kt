@@ -1,8 +1,10 @@
 package com.example.im.ui.fragment
 
 import android.app.AlertDialog
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.im.R
 import com.example.im.adapter.ContactsListAdapter
@@ -11,7 +13,10 @@ import com.example.im.model.ContactsItem
 import com.example.im.presenter.ContactsPresenter
 import com.example.im.ui.activity.ChatActivity
 import com.example.im.utils.LogUtils
+import com.example.im.widget.ContactsIndexView
 import kotlinx.android.synthetic.main.fragment_contacts.*
+import java.util.*
+
 
 class ContactsFragment : BaseFragment(), ContactsContract.View {
     override val presenter by lazy { ContactsPresenter(this) }
@@ -41,12 +46,87 @@ class ContactsFragment : BaseFragment(), ContactsContract.View {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(activity)
                 addItemDecoration(DividerItemDecoration(activity, VERTICAL))
+                addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
+                            mShouldScroll = false
+                            smoothMoveTo(mToPosition)
+                        }
+                    }
+                })
             }.adapter = this
+
+            contactsIndexView.setOnSlidingListener(object : ContactsIndexView.OnSlidingListener {
+                override fun onSliding(letter: String) {
+                    currentLetterTextView.text = letter
+                    currentLetterTextView.visibility = View.VISIBLE
+                    /*
+                    val itemPosition = getItemPosition(letter)
+                    if (itemPosition != -1) {
+                        recyclerView.smoothScrollToPosition(itemPosition)
+                    }
+                     */
+                    smoothMoveTo(letter)
+                }
+
+                override fun onSlidingRelease() {
+                    currentLetterTextView.visibility = View.GONE
+                }
+            })
         }
         swipeRefreshLayout.apply {
             setColorSchemeColors(resources.getColor(R.color.qq_blue, null))
             setOnRefreshListener { presenter.loadContacts() }
         }
+    }
+
+    //目标项是否在最后一个可见项之后
+    private var mShouldScroll = false
+    //记录目标项位置
+    private var mToPosition = 0
+    /**
+     * 滑动到指定位置
+     */
+    private fun smoothMoveTo(letter: String) {
+        val position = getItemPosition(letter)
+        if (position == -1) {
+            return
+        }
+        smoothMoveTo(position)
+    }
+
+    private fun smoothMoveTo(position: Int) {
+        // 第一个可见位置
+        val firstItem = recyclerView.getChildLayoutPosition(recyclerView.getChildAt(0))
+        // 最后一个可见位置
+        val lastItem = recyclerView.getChildLayoutPosition(recyclerView.getChildAt(recyclerView.childCount - 1))
+        LogUtils.d("firstItem = $firstItem, lastItem = $lastItem, currentPosition = $position")
+        if (position < firstItem) {
+            // 第一种可能:跳转位置在第一个可见位置之前
+            recyclerView.smoothScrollToPosition(position)
+        } else if (position <= lastItem) {
+            // 第二种可能:跳转位置在第一个可见位置之后
+            val movePosition = position - firstItem
+            if (movePosition >= 0 && movePosition < recyclerView.childCount) {
+                val top = recyclerView.getChildAt(movePosition).top
+                recyclerView.smoothScrollBy(0, top)
+            }
+        } else {
+            // 第三种可能:跳转位置在最后可见项之后
+            recyclerView.smoothScrollToPosition(position)
+            mToPosition = position
+            mShouldScroll = true
+        }
+    }
+
+    private fun getItemPosition(firstLetter: String): Int {
+        for((position, item) in adapter.currentList.withIndex()) {
+            if(item.firstLetter.toUpperCase(Locale.ROOT) == firstLetter) {
+                return position
+            }
+        }
+        return -1
     }
 
     override fun initData() {
