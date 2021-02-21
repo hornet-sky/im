@@ -31,4 +31,14 @@
     <string name="contacts_deleting">删除好友中…</string>
     <string name="contacts_delete_success">删除好友成功</string>
     <string name="contacts_delete_failed">删除好友失败</string>
+    <string name="account_search_edit_text_hint">请输入好友账号</string>
+    <string name="contacts_add_title">添加好友</string>
+    <string name="add_button_label">添加</string>
+    <string name="add_button_reverse_label">已添加</string>
+    <string name="contacts_searching">搜索好友中…</string>
+    <string name="contacts_search_success">搜索好友成功</string>
+    <string name="contacts_search_failed">搜索好友失败</string>
+    <string name="contacts_add_req_sending">发送添加好友请求中…</string>
+    <string name="contacts_add_req_send_success">已发送添加好友请求</string>
+    <string name="contacts_add_req_send_failed">发送添加好友请求失败</string>
 </resources>

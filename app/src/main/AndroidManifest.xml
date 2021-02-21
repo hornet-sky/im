@@ -28,11 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IM"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.ChatActivity"></activity>
+        <activity android:name=".ui.activity.ChatActivity"/>
+        <activity android:name=".ui.activity.AddContactsActivity"/>
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.example.im.BmobContentProvider"></provider>
+            android:authorities="com.example.im.BmobContentProvider"/>
 
         <activity android:name=".ui.activity.RegisterActivity" />
         <!--

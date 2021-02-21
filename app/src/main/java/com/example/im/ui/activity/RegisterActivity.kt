@@ -50,7 +50,7 @@ class RegisterActivity : BaseActivity(), RegisterContract.View {
 
     override fun onRegisterSuccess(account: String) {
         dismissProgress()
-        startActivityThenFinish<LoginActivity>("account" to account)
+        finishForResult(RESULT_CODE_REGISTER_SUCCESS, "account" to account)
         toast(getString(R.string.register_success))
     }
 

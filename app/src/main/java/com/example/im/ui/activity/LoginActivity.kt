@@ -1,5 +1,6 @@
 package com.example.im.ui.activity
 
+import android.content.Intent
 import com.example.im.R
 import com.example.im.contract.LoginContract
 import com.example.im.presenter.LoginPresenter
@@ -9,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.accountEditText
 import kotlinx.android.synthetic.main.activity_login.passwordEditText
 import kotlinx.android.synthetic.main.activity_register.*
+import org.jetbrains.anko.startActivityForResult
 
 class LoginActivity : BaseActivity(), LoginContract.View {
     override val presenter by lazy { LoginPresenter(this) }
@@ -21,9 +23,6 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     */
 
     override fun init() {
-        intent.getStringExtra("account")?.let {
-            accountEditText.setText(it)
-        }
         loginButton.setOnClickListener {
             login()
         }
@@ -34,7 +33,16 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         }
         registerUserTextView.setOnClickListener {
             hideSoftKeyboard()
-            startActivityThenFinish<RegisterActivity>()
+            startActivityForResult<RegisterActivity>(REQUEST_CODE_REGISTER)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_CODE_REGISTER) {
+            data?.getStringExtra("account")?.let {
+                accountEditText.setText(it)
+            }
         }
     }
 

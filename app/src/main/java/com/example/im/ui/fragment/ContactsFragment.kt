@@ -8,24 +8,86 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.im.R
 import com.example.im.adapter.ContactsListAdapter
+import com.example.im.adapter.EMContactListenerAdapter
 import com.example.im.contract.ContactsContract
 import com.example.im.model.ContactsItem
 import com.example.im.presenter.ContactsPresenter
+import com.example.im.ui.activity.AddContactsActivity
 import com.example.im.ui.activity.ChatActivity
 import com.example.im.utils.LogUtils
 import com.example.im.widget.ContactsIndexView
+import com.hyphenate.EMContactListener
+import com.hyphenate.chat.EMClient
 import kotlinx.android.synthetic.main.fragment_contacts.*
+import kotlinx.android.synthetic.main.top_action_bar.*
 import java.util.*
 
 
 class ContactsFragment : BaseFragment(), ContactsContract.View {
     override val presenter by lazy { ContactsPresenter(this) }
     private lateinit var adapter: ContactsListAdapter
+    private lateinit var emContactListener: EMContactListener
 
     override fun getResId() = R.layout.fragment_contacts
     override fun getTitle() = getString(R.string.contacts_title)
 
     override fun initListener() {
+        initRecyclerViewListener()
+        initContactsIndexViewListener()
+        initAddBtnListener()
+        initSwipeRefreshLayoutListener()
+        initEMContactListener()
+    }
+
+    private fun initEMContactListener() {
+        emContactListener = object : EMContactListenerAdapter() {
+            override fun onContactDeleted(account: String?) {
+                LogUtils.d("emContactListener.onContactDeleted [ account = $account ]")
+                presenter.loadContacts()
+            }
+            override fun onContactAdded(account: String?) {
+                LogUtils.d("emContactListener.onContactAdded [ account = $account ]")
+                presenter.loadContacts()
+            }
+        }
+        EMClient.getInstance().contactManager().setContactListener(emContactListener)
+    }
+
+    private fun initSwipeRefreshLayoutListener() {
+        swipeRefreshLayout.apply {
+            setColorSchemeColors(resources.getColor(R.color.qq_blue, null))
+            setOnRefreshListener { presenter.loadContacts() }
+        }
+    }
+
+    private fun initAddBtnListener() {
+        addBtn.visibility = View.VISIBLE
+        addBtn.setOnClickListener {
+            startActivity<AddContactsActivity>()
+        }
+    }
+
+    private fun initContactsIndexViewListener() {
+        contactsIndexView.setOnSlidingListener(object : ContactsIndexView.OnSlidingListener {
+            override fun onSliding(letter: String) {
+                currentLetterTextView.text = letter
+                currentLetterTextView.visibility = View.VISIBLE
+                /*
+                val itemPosition = getItemPosition(letter)
+                if (itemPosition != -1) {
+                    recyclerView.smoothScrollToPosition(itemPosition)
+                }
+                 */
+                smoothMoveTo(letter)
+            }
+
+            override fun onSlidingRelease() {
+                currentLetterTextView.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun initRecyclerViewListener() {
         adapter = ContactsListAdapter().apply {
             setOnItemViewClickListener { position, contactsItem ->
                 LogUtils.d("onContactsItemClick [ position = $position, contactsItem = ${contactsItem.account} ]")
@@ -46,7 +108,7 @@ class ContactsFragment : BaseFragment(), ContactsContract.View {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(activity)
                 addItemDecoration(DividerItemDecoration(activity, VERTICAL))
-                addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
                         if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
@@ -56,28 +118,6 @@ class ContactsFragment : BaseFragment(), ContactsContract.View {
                     }
                 })
             }.adapter = this
-
-            contactsIndexView.setOnSlidingListener(object : ContactsIndexView.OnSlidingListener {
-                override fun onSliding(letter: String) {
-                    currentLetterTextView.text = letter
-                    currentLetterTextView.visibility = View.VISIBLE
-                    /*
-                    val itemPosition = getItemPosition(letter)
-                    if (itemPosition != -1) {
-                        recyclerView.smoothScrollToPosition(itemPosition)
-                    }
-                     */
-                    smoothMoveTo(letter)
-                }
-
-                override fun onSlidingRelease() {
-                    currentLetterTextView.visibility = View.GONE
-                }
-            })
-        }
-        swipeRefreshLayout.apply {
-            setColorSchemeColors(resources.getColor(R.color.qq_blue, null))
-            setOnRefreshListener { presenter.loadContacts() }
         }
     }
 
@@ -135,17 +175,20 @@ class ContactsFragment : BaseFragment(), ContactsContract.View {
 
     override fun onStartLoadContacts() {
         if(!swipeRefreshLayout.isRefreshing)
-            swipeRefreshLayout.isRefreshing = true
+            swipeRefreshLayout.post {
+                swipeRefreshLayout.isRefreshing = true
+            }
     }
 
     override fun onLoadContactsSuccess(contacts: MutableList<ContactsItem>) {
+        LogUtils.d("onLoadContactsSuccess [ contacts = $contacts ]")
         swipeRefreshLayout.isRefreshing = false
         adapter.submitList(contacts)
     }
 
     override fun onLoadContactsFailed(code: Int, message: String?) {
-        swipeRefreshLayout.isRefreshing = false
         LogUtils.d("onLoadContactsFailed [ code = $code, message = $message ]")
+        swipeRefreshLayout.isRefreshing = false
         toast(getString(R.string.loading_failed, getString(R.string.contacts_title)))
     }
 
@@ -162,5 +205,10 @@ class ContactsFragment : BaseFragment(), ContactsContract.View {
         LogUtils.d("onDeleteContactFailed [ code = $code, message = $message ]")
         dismissProgress()
         toast(getString(R.string.contacts_delete_failed))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EMClient.getInstance().contactManager().removeContactListener(emContactListener)
     }
 }

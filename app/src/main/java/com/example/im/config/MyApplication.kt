@@ -7,6 +7,12 @@ import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMOptions
 
 class MyApplication : Application() {
+    companion object {
+        lateinit var instance: MyApplication
+    }
+    init {
+        instance = this
+    }
     override fun onCreate() {
         super.onCreate()
         // 1、Bmob云后端 初始化

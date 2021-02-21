@@ -21,6 +21,10 @@ class ContactsItem(val firstLetter: String, val account: String, val avatar: Str
         return 0
     }
 
+    override fun toString(): String {
+        return "ContactsItem(account='$account')"
+    }
+
     companion object CREATOR : Parcelable.Creator<ContactsItem> {
         override fun createFromParcel(parcel: Parcel): ContactsItem {
             return ContactsItem(parcel)

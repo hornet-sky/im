@@ -17,13 +17,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/backImageView"
+            android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:visibility="invisible"
-            app:srcCompat="@drawable/ic_arrow_back_24" />
+            app:srcCompat="@drawable/selector_icon_btn_back" />
 
         <TextView
             android:id="@+id/titleTextView"
@@ -36,12 +36,12 @@
             tools:text="title" />
 
         <ImageView
-            android:id="@+id/addImageView"
+            android:id="@+id/addBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:visibility="invisible"
-            app:srcCompat="@drawable/ic_add_24" />
+            app:srcCompat="@drawable/selector_icon_btn_add" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

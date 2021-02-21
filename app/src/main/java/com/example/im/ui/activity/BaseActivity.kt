@@ -8,14 +8,18 @@ import android.os.Looper
 import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.im.R
 import com.example.im.contract.BasePresenter
 import java.io.Serializable
 
 abstract class BaseActivity : AppCompatActivity() {
     companion object {
         const val DELAY: Long = 2000
+        const val REQUEST_CODE_REGISTER: Int = 1001
+        const val RESULT_CODE_REGISTER_SUCCESS: Int = 200
     }
     protected val handler = Handler(Looper.getMainLooper())
     protected open var run: (() -> Unit)? = null
@@ -29,12 +33,21 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutResID())
+        initTitle()
         init()
     }
 
     open fun init() {}
 
     abstract fun getLayoutResID(): Int
+
+    private fun initTitle() {
+        delegate.findViewById<TextView>(R.id.titleTextView)?.text = getTitleText()
+    }
+
+    protected open fun getTitleText(): String {
+        return ""
+    }
 
     fun showProgress(message: String) {
         progressDialog.setMessage(message)
@@ -77,11 +90,24 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+    inline fun <reified T> startActivity(requestCode: Int, vararg extras: Pair<String, Any>) {
+        val intent =  Intent(this, T::class.java).apply {
+            fillIntentArguments(this, extras)
+        }
+        startActivityForResult(intent, requestCode)
+    }
     inline fun <reified T> startActivityThenFinish(vararg extras: Pair<String, Any?>) {
         val intent =  Intent(this, T::class.java).apply {
             fillIntentArguments(this, extras)
         }
         startActivity(intent)
+        finish()
+    }
+    fun finishForResult(resultCode: Int, vararg extras: Pair<String, Any?>) {
+        val resultIntent = Intent().apply {
+            fillIntentArguments(this, extras)
+        }
+        setResult(resultCode, resultIntent)
         finish()
     }
 
