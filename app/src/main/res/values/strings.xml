@@ -41,4 +41,8 @@
     <string name="contacts_add_req_sending">发送添加好友请求中…</string>
     <string name="contacts_add_req_send_success">已发送添加好友请求</string>
     <string name="contacts_add_req_send_failed">发送添加好友请求失败</string>
+    <string name="send_btn_label">发送</string>
+    <string name="message_edit_text_hint">请输入想要发送的消息</string>
+    <string name="chat_title">与 %s 交谈</string>
+    <string name="non_text_message">非文本消息</string>
 </resources>
