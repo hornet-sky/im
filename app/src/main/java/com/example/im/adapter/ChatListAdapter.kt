@@ -15,27 +15,45 @@ import com.hyphenate.chat.EMTextMessageBody
 import com.hyphenate.util.DateUtils
 import java.util.*
 
-class ChatListAdapter : ListAdapter<EMMessage, ChatListAdapter.BaseViewHolder>(object: DiffUtil.ItemCallback<EMMessage>() {
+class ChatListAdapter : ListAdapter<EMMessage, RecyclerView.ViewHolder>(object: DiffUtil.ItemCallback<EMMessage>() {
     override fun areItemsTheSame(oldItem: EMMessage, newItem: EMMessage) = oldItem == newItem
     override fun areContentsTheSame(oldItem: EMMessage, newItem: EMMessage) = oldItem.msgId == newItem.msgId
 }) {
-    override fun getItemViewType(position: Int): Int {
-        return if(getItem(position).direct() == EMMessage.Direct.SEND) R.layout.chat_send_message_item else R.layout.chat_receive_message_item
+    private var loading: Boolean = false
+    fun setLoading(loading: Boolean) {
+         this.loading = loading
     }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+
+    override fun getItemCount(): Int {
+        return if(loading) currentList.size + 1 else currentList.size
+    }
+    fun getAmendedPosition(position: Int): Int {
+        return if(loading) position - 1 else position
+    }
+    override fun getItemViewType(position: Int): Int {
+        return if(loading && position == 0) R.layout.loading_item
+        else if(getItem(getAmendedPosition(position)).direct() == EMMessage.Direct.SEND)
+            R.layout.chat_send_message_item
+        else R.layout.chat_receive_message_item
+    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return LayoutInflater.from(parent.context).inflate(viewType, parent, false).let {
             when(viewType) {
+                R.layout.loading_item -> object: RecyclerView.ViewHolder(it) {}
                 R.layout.chat_send_message_item -> SendMessageViewHolder(it)
                 else -> ReceiveMessageViewHolder(it)
             }
         }
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val currentItem = getItem(position)
-        val timeVisibility = if(position == 0 || !DateUtils.isCloseEnough(currentItem.msgTime, getItem(position - 1).msgTime)) View.VISIBLE
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(holder is BaseViewHolder) { // 也可以用loading 和 position 进行判断
+            val amendedPosition = getAmendedPosition(position)
+            val currentItem = getItem(amendedPosition)
+            val timeVisibility = if(amendedPosition == 0 || !DateUtils.isCloseEnough(currentItem.msgTime, getItem(amendedPosition - 1).msgTime)) View.VISIBLE
             else View.GONE
-        holder.bind(currentItem, timeVisibility)
+            holder.bind(currentItem, timeVisibility)
+        }
     }
 
     abstract class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -80,6 +98,7 @@ class ChatListAdapter : ListAdapter<EMMessage, ChatListAdapter.BaseViewHolder>(o
                         visibility = View.VISIBLE
                     }
                 }
+                else -> {}
             }
         }
     }

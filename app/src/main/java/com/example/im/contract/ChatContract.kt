@@ -17,6 +17,7 @@ interface ChatContract {
         fun onSendMessageSuccess()
         fun onSendMessageFailed(code: Int, message: String?)
         fun onReceivedMessagesSuccess()
-        fun onLoadMessagesSuccess(initial: Boolean)
+        fun onStartLoadMessages()
+        fun onLoadMessagesSuccess(initial: Boolean, loadMsgSize: Int)
     }
 }

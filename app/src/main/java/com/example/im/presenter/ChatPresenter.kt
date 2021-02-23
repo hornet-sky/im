@@ -35,10 +35,12 @@ class ChatPresenter(override var view: ChatContract.View?) : ChatContract.Presen
             EMClient.getInstance().chatManager().getConversation(targetAccount)?.apply {
                 if(emMessages.isEmpty()) {
                     emMessages.addAll(allMessages)
-                    uiThread { view!!.onLoadMessagesSuccess(true) }
+                    uiThread { view!!.onLoadMessagesSuccess(true, allMessages.size) }
                 } else {
-                    emMessages.addAll(0, loadMoreMsgFromDB(emMessages.first().msgId, PAGE_SIZE))
-                    uiThread { view!!.onLoadMessagesSuccess(false) }
+                    uiThread { view!!.onStartLoadMessages() }
+                    val msgsFromDB = loadMoreMsgFromDB(emMessages.first().msgId, PAGE_SIZE)
+                    emMessages.addAll(0, msgsFromDB)
+                    uiThread { view!!.onLoadMessagesSuccess(false, msgsFromDB.size) }
                 }
             }
         }

@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.im.R
 import com.example.im.adapter.ChatListAdapter
 import com.example.im.adapter.EMMessageListenerAdapter
@@ -52,6 +53,16 @@ class ChatActivity : BaseActivity(), ChatContract.View {
             this@ChatActivity.adapter = ChatListAdapter().apply { submitList(presenter.getEMMessages()) }
             adapter = this@ChatActivity.adapter
             layoutManager = LinearLayoutManager(this@ChatActivity)
+            addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    LogUtils.d("recyclerView.onScrollStateChanged [ newState = $newState ]")
+                    if(RecyclerView.SCROLL_STATE_IDLE == newState
+                            && (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition() == 0) {
+                        LogUtils.d("recyclerView.onScrollStateChanged [ loading ]")
+                        presenter.loadEMMessages()
+                    }
+                }
+            })
         }
     }
 
@@ -63,10 +74,8 @@ class ChatActivity : BaseActivity(), ChatContract.View {
         messageEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
-
             override fun afterTextChanged(editable: Editable?) {
                 editable?.let {
                     sendButton.isEnabled = !TextUtils.isEmpty(it.toString())
@@ -106,10 +115,18 @@ class ChatActivity : BaseActivity(), ChatContract.View {
         recyclerView.scrollToPosition(presenter.emMessagesSize() - 1)
     }
 
-    override fun onLoadMessagesSuccess(initial: Boolean) {
+    override fun onStartLoadMessages() {
+        adapter.setLoading(true)
         adapter.notifyDataSetChanged()
-        if (initial) {
+    }
+
+    override fun onLoadMessagesSuccess(initial: Boolean, loadMsgSize: Int) {
+        adapter.setLoading(false)
+        adapter.notifyDataSetChanged()
+        if (initial) { // 初始化加载
             recyclerView.scrollToPosition(presenter.emMessagesSize() - 1)
+        } else if(loadMsgSize > 0) { // 下拉加载更多
+            recyclerView.scrollToPosition(loadMsgSize) // 让新消息可见
         }
     }
 
