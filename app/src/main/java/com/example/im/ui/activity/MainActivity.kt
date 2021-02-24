@@ -9,7 +9,6 @@ import com.example.im.utils.LogUtils
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMMessage
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.runOnUiThread
 
 class MainActivity : BaseActivity(), MainContract.View {
     override val presenter by lazy { MainPresenter(this) }

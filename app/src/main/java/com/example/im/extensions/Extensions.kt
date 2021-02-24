@@ -2,7 +2,6 @@ package com.example.im.extensions
 
 import android.content.Context
 import com.example.im.model.db.MyDatabaseOpenHelper
-import com.hyphenate.chat.EMConversation
 
 fun String.isValidAccount() = this.matches(Regex("^[a-zA-Z]\\w{2,19}$"))
 fun String.isValidPassword() = this.matches(Regex("^\\d{3,20}$"))

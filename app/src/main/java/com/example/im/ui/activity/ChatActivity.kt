@@ -9,7 +9,6 @@ import com.example.im.R
 import com.example.im.adapter.ChatListAdapter
 import com.example.im.adapter.EMMessageListenerAdapter
 import com.example.im.contract.ChatContract
-import com.example.im.model.ContactsItem
 import com.example.im.presenter.ChatPresenter
 import com.example.im.utils.LogUtils
 import com.hyphenate.EMMessageListener

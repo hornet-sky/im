@@ -1,7 +1,6 @@
 package com.example.im.presenter
 
 import com.example.im.contract.ConversationsContract
-import com.example.im.utils.LogUtils
 import com.hyphenate.chat.EMClient
 
 class ConversationsPresenter(override var view: ConversationsContract.View?) : ConversationsContract.Presenter {
