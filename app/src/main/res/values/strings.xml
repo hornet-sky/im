@@ -47,4 +47,5 @@
     <string name="non_text_message">非文本消息</string>
     <string name="conversations_loading">加载消息中…</string>
     <string name="receive_new_message">收到新消息</string>
+    <string name="user_login_another_device">该账号已在其他设备登录</string>
 </resources>

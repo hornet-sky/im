@@ -2,7 +2,6 @@ package com.example.im.config
 
 import android.app.*
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -15,11 +14,13 @@ import com.example.im.BuildConfig
 import com.example.im.R
 import com.example.im.adapter.EMMessageListenerAdapter
 import com.example.im.ui.activity.ChatActivity
+import com.example.im.ui.activity.MainActivity
 import com.example.im.utils.LogUtils
 import com.hyphenate.chat.EMClient
 import com.hyphenate.chat.EMMessage
 import com.hyphenate.chat.EMOptions
 import com.hyphenate.chat.EMTextMessageBody
+
 
 class MyApplication : Application() {
     companion object {
@@ -110,17 +111,17 @@ class MyApplication : Application() {
         } else {
             getString(R.string.non_text_message)
         }
-        updateNotificationUI(msgText)
+        updateNotificationUI(msgText, msg.userName)
     }
 
     private var notificationBuilder: NotificationCompat.Builder? = null
     private var notificationManager: NotificationManagerCompat? = null
-    private fun updateNotificationUI(content: String) {
+    private fun updateNotificationUI(content: String, targetAccount: String) {
         if(notificationBuilder == null) {
             val channelId = createNotificationChannel(NOTIFI_AUDIO_PLAYER_CHANNEL_ID,
                     NOTIFI_AUDIO_PLAYER_CHANNEL_NAME,
                     NotificationManagerCompat.IMPORTANCE_LOW) // IMPORTANCE_DEFAULT 有提示音
-            notificationBuilder = getNotificationBuilder(channelId)
+            notificationBuilder = getNotificationBuilder(channelId, targetAccount)
         }
         if(notificationManager == null) {
             notificationManager = NotificationManagerCompat.from(this)
@@ -128,13 +129,13 @@ class MyApplication : Application() {
         notificationManager!!.notify(NOTIFI_AUDIO_PLAYER_ID, notificationBuilder!!.setContentText(content).build())
     }
 
-    private fun getNotificationBuilder(channelId: String?): NotificationCompat.Builder {
+    private fun getNotificationBuilder(channelId: String?, targetAccount: String): NotificationCompat.Builder {
         return if(channelId == null) NotificationCompat.Builder(this)
         else NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_chat_bubble_24)
                 .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.avatar1))
                 .setContentTitle(getString(R.string.receive_new_message))
-                //.setContentIntent(getPendingIntentBody())
+                .setContentIntent(getPendingIntentBody(targetAccount))
                 .setWhen(System.currentTimeMillis())
                 .setPriority(NotificationCompat.PRIORITY_LOW) // 不要提示音
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -154,9 +155,21 @@ class MyApplication : Application() {
     private fun getPendingIntentBody(targetAccount: String): PendingIntent {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("targetAccount", targetAccount)
+        val parentIntent = Intent(this, MainActivity::class.java)
         return TaskStackBuilder.create(this).let {
-            it.addNextIntentWithParentStack(intent)
+            it.addNextIntentWithParentStack(parentIntent)
+            it.addNextIntent(intent)
             it.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
         }
+
+        /*
+        // 这两种方式在android11上按回退键后都无法返回到主界面。
+        // 可以考虑先到主界面，然后根据intent里的参数判断继续跳到指定界面。这样再点回退键后就能到主界面。
+        val resultIntent = Intent(this, ChatActivity::class.java)
+        resultIntent.putExtra("targetAccount", targetAccount)
+        val backIntent = Intent(this, MainActivity::class.java)
+        backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return PendingIntent.getActivities(this, 0, arrayOf(backIntent, resultIntent), PendingIntent.FLAG_ONE_SHOT)
+        */
     }
 }
