@@ -91,7 +91,7 @@ class ContactsFragment : BaseFragment(), ContactsContract.View {
         adapter = ContactsListAdapter().apply {
             setOnItemViewClickListener { position, contactsItem ->
                 LogUtils.d("onContactsItemClick [ position = $position, contactsItem = ${contactsItem.account} ]")
-                startActivity<ChatActivity>("target" to contactsItem)
+                startActivity<ChatActivity>("targetAccount" to contactsItem.account)
             }
             setOnItemViewLongClickListener { position, contactsItem ->
                 LogUtils.d("onContactsItemLongClick [ position = $position, contactsItem = ${contactsItem.account} ]")

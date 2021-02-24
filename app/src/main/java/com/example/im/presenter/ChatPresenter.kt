@@ -33,6 +33,7 @@ class ChatPresenter(override var view: ChatContract.View?) : ChatContract.Presen
         LogUtils.d("ChatPresenter.loadEMMessages [ targetAccount = $targetAccount ]")
         doAsync {
             EMClient.getInstance().chatManager().getConversation(targetAccount)?.apply {
+                markAllMessagesAsRead()
                 if(emMessages.isEmpty()) {
                     emMessages.addAll(allMessages)
                     uiThread { view!!.onLoadMessagesSuccess(true, allMessages.size) }

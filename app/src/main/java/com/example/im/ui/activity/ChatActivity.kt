@@ -25,7 +25,7 @@ class ChatActivity : BaseActivity(), ChatContract.View {
     override fun getLayoutResID() = R.layout.activity_chat
     override fun getTitleText() = getString(R.string.chat_title, presenter.getTargetAccount())
     override fun init() {
-        presenter.setTargetAccount(intent.getParcelableExtra<ContactsItem>("target")!!.account)
+        presenter.setTargetAccount(intent.getStringExtra("targetAccount")!!)
         initMessageEditText()
         initSendButton()
         initRecyclerView()

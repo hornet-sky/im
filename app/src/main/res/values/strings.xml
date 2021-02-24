@@ -45,4 +45,5 @@
     <string name="message_edit_text_hint">请输入想要发送的消息</string>
     <string name="chat_title">与 %s 交谈</string>
     <string name="non_text_message">非文本消息</string>
+    <string name="conversations_loading">加载消息中…</string>
 </resources>

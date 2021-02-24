@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IM"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.activity.ChatActivity"/>
+        <activity android:name=".ui.activity.ChatActivity" android:launchMode="singleTask"/>
         <activity android:name=".ui.activity.AddContactsActivity"/>
 
         <provider

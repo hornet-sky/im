@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/avatarImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@mipmap/avatar7" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/accountTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:text="Tom" />
+
+        <TextView
+            android:id="@+id/lastMessageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/qq_gray_dark"
+            android:textSize="14sp"
+            tools:text="hello, how are you?" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/qq_gray_dark"
+            android:textSize="14sp"
+            tools:text="上午 09:49" />
+
+        <TextView
+            android:id="@+id/unreadCountTextView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/shap_unread_count_bg"
+            android:gravity="center"
+            android:padding="2dp"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            tools:text="99" />
+
+
+    </LinearLayout>
+</LinearLayout>
