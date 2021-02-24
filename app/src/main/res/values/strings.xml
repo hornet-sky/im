@@ -46,4 +46,5 @@
     <string name="chat_title">与 %s 交谈</string>
     <string name="non_text_message">非文本消息</string>
     <string name="conversations_loading">加载消息中…</string>
+    <string name="receive_new_message">收到新消息</string>
 </resources>
